@@ -1,6 +1,7 @@
 package org.extractutility;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 
 /**
  * @author bertjan132
@@ -8,6 +9,7 @@ import javax.swing.JFrame;
 public class Main {
 	
 	public static JFrame frame;
+	public static JMenuBar menu;
 	
 	/**
 	 * This is the first method Java reads.
@@ -15,6 +17,9 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		frame = new DoFrame();
+		menu = new Menu();
+		
+		frame.setJMenuBar(menu);
 	}
 	
 }
