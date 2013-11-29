@@ -2,6 +2,8 @@ package org.extractutility;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -35,6 +37,11 @@ public class Menu extends JMenuBar implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getActionCommand() == "Open") {
 			Actions.openChooser();
+			try {
+				Actions.unZip(new File(Actions.chooser.getSelectedFile().getAbsolutePath()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
