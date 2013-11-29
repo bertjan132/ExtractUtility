@@ -5,4 +5,8 @@ It currently supports: Zip compressed files.
 
 Known Bugs
 ==============
-- None, waiting till Alpha version. (:
+- Flickering draw strings on icon hover.
+
+Support
+==============
+ExtractUtility supports Windows and Linux KDE/Gnome.
