@@ -5,4 +5,4 @@ It currently supports: Zip compressed files.
 
 Known Bugs
 ==============
-- After extracting the first zip entry won't be released. Thus you have to close the application in order to modify or remove this file.
+- None, waiting till Alpha version. (:
