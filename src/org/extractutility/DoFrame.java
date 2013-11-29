@@ -1,7 +1,5 @@
 package org.extractutility;
 
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 
 /**
@@ -10,6 +8,19 @@ import javax.swing.JFrame;
 public class DoFrame extends JFrame {
 
 	/**
+	 * This will return the version of the applet.
+	 */
+	private enum version {
+		Alpha(1.0);
+		
+		public double version;
+		
+		private version(double version) {
+			this.version = version;
+		}
+	}
+	
+	/**
 	 * This prevents mistakes between extending classes.
 	 */
 	private static final long serialVersionUID = -2954563707513467945L;
@@ -17,23 +28,30 @@ public class DoFrame extends JFrame {
 	/**
 	 * This is the width of the utility.
 	 */
-	public static final int WIDTH = 650;
+	private final int WIDTH = 650;
 	
 	/**
 	 * This is the height of the utility.
 	 */
-	public static final int HEIGHT = 450;
+	private final int HEIGHT = 450;
+	
+	/**
+	 * This will return the frame.
+	 */
+	public static JFrame getFrame;
 	
 	/**
 	 * This makes the frame.
 	 */
 	public DoFrame() {
-		setTitle("ExtractUtility - UI");
+		setUndecorated(true);
+		setTitle("ExtractUtility - UI | " + version.values()[0] + " " + version.values()[0].version);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		add(new Interface(WIDTH, HEIGHT));
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+		getFrame = this;
 	}
 	
 }

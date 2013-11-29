@@ -18,9 +18,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		frame = new DoFrame();
-		menu = new Menu();
-		
-		frame.setJMenuBar(menu);
 	}
 	
 }
