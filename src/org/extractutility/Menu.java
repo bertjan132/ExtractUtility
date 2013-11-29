@@ -34,7 +34,7 @@ public class Menu extends JMenuBar implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getActionCommand() == "Open") {
-			System.out.println("You've just clicked open..");
+			Actions.openChooser();
 		}
 	}
 	

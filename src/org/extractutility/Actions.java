@@ -8,25 +8,26 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Actions {
 
+	/**
+	 * This stores the chooser and lets other classes use it.
+	 */
 	public static JFileChooser chooser;
 	
 	/**
-	 * This let you perform a certain action.
-	 * @param action
+	 * This stores the return value.
 	 */
-	public Actions(String action) {
-		if (action.equals("openChooser")) {
-			openChooser();
-		}
-	}
+	public static int returnVal;
 	
 	/**
 	 * This opens the file chooser.
 	 */
-	private void openChooser() {
+	public static void openChooser() {
 		chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("*.ZIP Extension", "zip");
-		int returnVal = chooser.showOpenDialog(Main.frame);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("*.ZIP Archive", "zip");
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.setFileFilter(filter);
+		returnVal = chooser.showOpenDialog(Main.frame);
+		System.out.println(returnVal);
 	}
 	
 }

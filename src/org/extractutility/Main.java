@@ -10,6 +10,7 @@ public class Main {
 	
 	public static JFrame frame;
 	public static JMenuBar menu;
+	public static Actions actions;
 	
 	/**
 	 * This is the first method Java reads.
