@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -30,9 +31,13 @@ public class Actions {
 	 */
 	public static void openChooser() {
 		chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("*.ZIP Archive", "zip");
+		FileNameExtensionFilter all = new FileNameExtensionFilter("Any Archive", "zip", "gz");
+		FileNameExtensionFilter zip = new FileNameExtensionFilter("*.ZIP Archive", "zip");
+		FileNameExtensionFilter gz = new FileNameExtensionFilter("*.GZ Archive", "gz");
 		chooser.setAcceptAllFileFilterUsed(false);
-		chooser.setFileFilter(filter);
+		chooser.setFileFilter(all);
+		chooser.addChoosableFileFilter(zip);
+		chooser.addChoosableFileFilter(gz);
 		returnVal = chooser.showOpenDialog(Main.getFrame);
 	}
 	
@@ -40,10 +45,10 @@ public class Actions {
 	 * This will unZip the input file.
 	 */
 	public static void unZip(File input) throws IOException {
+		byte [] buffer = new byte[1024];
 		try (ZipInputStream in = new ZipInputStream(new FileInputStream(input))) {
 			ZipEntry nextEntry;
 			while ((nextEntry = in.getNextEntry()) != null) {
-				byte [] buffer = new byte[(int) nextEntry.getSize()];
 				File totalPath = new File(input.getParent() + File.separator + nextEntry.getName());
 				if (nextEntry.isDirectory()) {
 					totalPath.mkdirs();
@@ -55,6 +60,21 @@ public class Actions {
 						}
 					}
 				}
+			}
+		}
+	}
+	
+	/**
+	 * This will unGZip the input file.
+	 */
+	public static void unGZIP(File input) throws IOException {
+		byte [] buffer = new byte[1024];
+		File fileWithoutGz = new File(input.getPath().substring(0, input.getPath().length() - 3));
+		try (GZIPInputStream in = new GZIPInputStream(new FileInputStream(input));
+				FileOutputStream out = new FileOutputStream(fileWithoutGz)) {
+			int length;
+			while ((length = in.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
 			}
 		}
 	}

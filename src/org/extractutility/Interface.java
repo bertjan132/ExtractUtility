@@ -45,13 +45,20 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 		new FileDrop(this, new FileDrop.Listener() {
 			public void filesDropped(File[] files) {
 				for (int i = 0; i < files.length; i++) {
-					if (!files[i].toString().endsWith(".zip")) {
+					if (files[i].toString().endsWith(".zip")) {
+						try {
+							Actions.unZip(files[i]);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} else if (files[i].toString().endsWith(".gz")) {
+						try {
+							Actions.unGZIP(files[i]);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					} else {
 						return;
-					}
-					try {
-						Actions.unZip(files[i]);
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
 				}
 			}
@@ -81,8 +88,10 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 		g2.drawString(DoFrame.getFrame.getTitle(), 50, 29);
 		g2.setFont(new Font("Verdana", Font.PLAIN, 12));
 		g2.setColor(Color.BLACK);
-		String text = "Drop multiple or one *.zip file here.";
+		String text = "You can drop 'multiple' or 'one', '*.ZIP' or '*.GZ' files here.";
 		g2.drawString(text, getCenter(g2, text), HEIGHT / 2 + 60);
+		g2.setFont(new Font("Verdana", Font.PLAIN, 20));
+		g2.setColor(Color.decode("#232323"));
 		String text2 = "Click here to open file chooser.";
 		g2.drawString(text2, getCenter(g2, text2), 117);
 		update(g);
@@ -249,7 +258,11 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 			Actions.openChooser();
 			try { 
 				if (Actions.returnVal == 0) {
-					Actions.unZip(new File(Actions.chooser.getSelectedFile().getPath()));
+					if (Actions.chooser.getSelectedFile().getName().endsWith(".zip")) {
+						Actions.unZip(new File(Actions.chooser.getSelectedFile().getPath()));
+					} else if (Actions.chooser.getSelectedFile().getName().endsWith(".gz")) {
+						Actions.unGZIP(new File(Actions.chooser.getSelectedFile().getPath()));
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
