@@ -1,12 +1,12 @@
 ExtractUtility
 ==============
 - Extract Utility is a easy program that will help you with extracting compressed files.
-It currently supports: Zip compressed files.
+It currently supports: Zip compressed files, Gzip compressed files.
 
 Special Features
 ==============
 - Drag and drop has been added.
-- Custom UI (user interface) has been added.
+- Custom UI (user interface) has been added with button animations.
 
 Known Bugs
 ==============
