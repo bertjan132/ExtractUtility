@@ -10,7 +10,7 @@ Special Features
 
 Known Bugs
 ==============
-- None known.
+- I still have to add a buffer strategy. This causes flickering draw strings and buttons.
 
 Support
 ==============
