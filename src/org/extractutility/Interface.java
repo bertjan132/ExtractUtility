@@ -31,11 +31,6 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 	private final int HEIGHT;
 	
 	/**
-	 * This stores the label text.
-	 */
-	private String text = "You can drag any *.zip file here.";
-	
-	/**
 	 * The constructor of the method. This will grab the panel together.
 	 * @param width
 	 * @param height
@@ -64,17 +59,13 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 	}
 	
 	/**
-	 * This loads misc and images etc.
+	 * This loads miscellaneous and images etc.
 	 */
 	public static void loadInterface() {
 		loadBufferedImages();
 	}
 	
-	/**
-	 * This will give instructions to paint the applet.
-	 */
-	@Override
-	public void paintComponent(Graphics g) {
+	public void whatToPaint(Graphics g) {
 		g.setColor(Color.decode("#bbbbbb"));
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		g.setColor(Color.decode("#eeeeee"));
@@ -82,25 +73,38 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 		g.setColor(Color.decode("#bbbbbb"));
 		g.fillRect(1, 1, WIDTH - 1, 42);
 		g.setColor(Color.WHITE);
+		g.drawImage(backImage, WIDTH / 2 - backImage.getWidth() / 2, 60, null);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setFont(new Font("Verdana", Font.PLAIN, 20));
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2.drawString(DoFrame.getFrame.getTitle(), 50, 29);
 		g2.setFont(new Font("Verdana", Font.PLAIN, 12));
-		int stringX = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();  
-		int startX = WIDTH / 2 - stringX / 2;  
 		g2.setColor(Color.BLACK);
-		g2.drawString(text, startX, HEIGHT / 2);
+		String text = "Drop multiple or one *.zip file here.";
+		g2.drawString(text, getCenter(g2, text), HEIGHT / 2 + 60);
+		String text2 = "Click here to open file chooser.";
+		g2.drawString(text2, getCenter(g2, text2), 117);
 		update(g);
-		g2.dispose();
-		g.dispose();
+	}
+	
+	/**
+	 * This will give instructions to paint the applet.
+	 */
+	@Override
+	public void paintComponent(Graphics g) {
+		whatToPaint(g);
+	}
+	
+	public int getCenter(Graphics g2, String text) {
+		int stringX = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();  
+		return WIDTH / 2 - stringX / 2;
 	}
 	
 	/**
 	 * This stores the buffered images.
 	 */
-	private static BufferedImage closeImage = null, maxImage = null, minImage = null;
+	private static BufferedImage closeImage = null, maxImage = null, minImage = null, backImage = null;
 	
 	/**
 	 * This loads the BufferedImage one time.
@@ -110,10 +114,13 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 			closeImage = ImageIO.read(new File("res/close.png"));
 			maxImage = ImageIO.read(new File("res/max.png"));
 			minImage = ImageIO.read(new File("res/min.png"));
+			backImage = ImageIO.read(new File("res/back.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	private boolean repaintNow = false;
 	
 	/**
 	 * This will update the graphics.
@@ -125,13 +132,21 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 		int locY = 2;
 		if (this.close) {
 			g.drawImage(closeImage, locX, locY + 2, null);
+			repaintNow = true;
 		} else if (this.max) {
 			locX -= maxImage.getWidth() + 2;
 			g.drawImage(maxImage, locX, locY + 2, null);
+			repaintNow = true;
 		} else if (this.min) {
 			locX -= maxImage.getWidth() + 2;
 			locX -= maxImage.getWidth() + 2;
 			g.drawImage(minImage, locX, locY + 2, null);
+			repaintNow = true;
+		} else if (this.back) {
+			Color white = new Color(255, 255, 255, 120);
+			g.setColor(white);
+			g.fillRect(39, 72, 572, 76);
+			repaintNow = true;
 		} else {
 			locX = 626;
 			locY = 2;
@@ -140,6 +155,12 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 			g.drawImage(maxImage, locX, locY, null);
 			locX -= maxImage.getWidth() + 2;
 			g.drawImage(minImage, locX, locY, null);
+			if (repaintNow) {
+				g.clearRect(0, 0, WIDTH, HEIGHT);
+				repaintNow = false;
+				whatToPaint(g);
+				g.dispose();
+			}
 		}
 	}
 	
@@ -152,14 +173,12 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 	 * This tells if the mouse is dragged.
 	 */
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		
-	}
+	public void mouseDragged(MouseEvent e) { }
 	
 	/**
 	 * This tells which button is hovered.
 	 */
-	private boolean close = false, max = false, min = false;
+	private boolean close = false, max = false, min = false, back = false;
 	
 	/**
 	 * This tells if it needs to stop updating.
@@ -197,8 +216,16 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 				updateOnce = false;
 				min = true;
 				stopUpdating = true;
-			}
+			} 
+		} else if (e.getX() > 39 && e.getX() < 611 && e.getY() > 72 && e.getY() < 148) {
+			while (!stopUpdating) {
+				back = true;
+				update(this.getGraphics());
+				updateOnce = false;
+				stopUpdating = true;
+			} 
 		} else {
+			back = false;
 			close = false; 
 			max = false; 
 			min = false;
@@ -218,27 +245,28 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 			// TODO Add the method, it has temporarily been disabled.
 		} else if (min) {
 			DoFrame.getFrame.setState(Frame.ICONIFIED);
+		} else if (back) {
+			Actions.openChooser();
+			try { 
+				if (Actions.returnVal == 0) {
+					Actions.unZip(new File(Actions.chooser.getSelectedFile().getPath()));
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		
-	}
+	public void mouseEntered(MouseEvent arg0) {	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		
-	}
+	public void mouseExited(MouseEvent arg0) { }
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		
-	}
+	public void mousePressed(MouseEvent arg0) {	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		
-	}
+	public void mouseReleased(MouseEvent arg0) { }
 	
 }
