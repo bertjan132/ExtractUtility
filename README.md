@@ -10,7 +10,7 @@ Special Features
 
 Known Bugs
 ==============
-- Flickering draw strings on icon hover.
+- None known.
 
 Support
 ==============
