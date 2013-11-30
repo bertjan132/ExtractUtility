@@ -33,7 +33,7 @@ public class Actions {
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("*.ZIP Archive", "zip");
 		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.setFileFilter(filter);
-		returnVal = chooser.showOpenDialog(Main.frame);
+		returnVal = chooser.showOpenDialog(Main.getFrame);
 	}
 	
 	/**

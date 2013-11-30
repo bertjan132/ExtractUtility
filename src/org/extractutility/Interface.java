@@ -33,7 +33,7 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 	/**
 	 * This stores the label text.
 	 */
-	private String text = "You can drag and drop any *.zip file here.";
+	private String text = "You can drag any *.zip file here.";
 	
 	/**
 	 * The constructor of the method. This will grab the panel together.
@@ -64,52 +64,23 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 	}
 	
 	/**
+	 * This loads misc and images etc.
+	 */
+	public static void loadInterface() {
+		loadBufferedImages();
+	}
+	
+	/**
 	 * This will give instructions to paint the applet.
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		update(g);
-	}
-	
-	/**
-	 * This will update the graphics.
-	 */
-	@Override
-	public void update(Graphics g) {
 		g.setColor(Color.decode("#bbbbbb"));
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		g.setColor(Color.decode("#eeeeee"));
 		g.fillRect(1, 1, WIDTH - 2, HEIGHT - 2);
 		g.setColor(Color.decode("#bbbbbb"));
 		g.fillRect(1, 1, WIDTH - 1, 42);
-		
-		BufferedImage close = null, max = null, min = null;
-		try {
-			close = ImageIO.read(new File("res/close.png"));
-			max = ImageIO.read(new File("res/max.png"));
-			min = ImageIO.read(new File("res/min.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		int locX = 626;
-		int locY = 2;
-		g.drawImage(close, locX, locY, null);
-		locX -= max.getWidth() + 2;
-		g.drawImage(max, locX, locY, null);
-		locX -= max.getWidth() + 2;
-		g.drawImage(min, locX, locY, null);
-		locX = 626;
-		locY = 2;
-		if (this.close) {
-			g.drawImage(close, locX, locY + 2, null);
-		} else if (this.max) {
-			locX -= max.getWidth() + 2;
-			g.drawImage(max, locX, locY + 2, null);
-		} else if (this.min) {
-			locX -= max.getWidth() + 2;
-			locX -= max.getWidth() + 2;
-			g.drawImage(min, locX, locY + 2, null);
-		}
 		g.setColor(Color.WHITE);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setFont(new Font("Verdana", Font.PLAIN, 20));
@@ -121,8 +92,55 @@ public class Interface extends JPanel implements MouseMotionListener, MouseInput
 		int startX = WIDTH / 2 - stringX / 2;  
 		g2.setColor(Color.BLACK);
 		g2.drawString(text, startX, HEIGHT / 2);
+		update(g);
 		g2.dispose();
 		g.dispose();
+	}
+	
+	/**
+	 * This stores the buffered images.
+	 */
+	private static BufferedImage closeImage = null, maxImage = null, minImage = null;
+	
+	/**
+	 * This loads the BufferedImage one time.
+	 */
+	private static void loadBufferedImages() {
+		try {
+			closeImage = ImageIO.read(new File("res/close.png"));
+			maxImage = ImageIO.read(new File("res/max.png"));
+			minImage = ImageIO.read(new File("res/min.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This will update the graphics.
+	 */
+	@Override
+	public void update(Graphics g) {
+		// Hovering close, maximize and minimize buttons are updating here.
+		int locX = 626;
+		int locY = 2;
+		if (this.close) {
+			g.drawImage(closeImage, locX, locY + 2, null);
+		} else if (this.max) {
+			locX -= maxImage.getWidth() + 2;
+			g.drawImage(maxImage, locX, locY + 2, null);
+		} else if (this.min) {
+			locX -= maxImage.getWidth() + 2;
+			locX -= maxImage.getWidth() + 2;
+			g.drawImage(minImage, locX, locY + 2, null);
+		} else {
+			locX = 626;
+			locY = 2;
+			g.drawImage(closeImage, locX, locY, null);
+			locX -= maxImage.getWidth() + 2;
+			g.drawImage(maxImage, locX, locY, null);
+			locX -= maxImage.getWidth() + 2;
+			g.drawImage(minImage, locX, locY, null);
+		}
 	}
 	
 	/**
